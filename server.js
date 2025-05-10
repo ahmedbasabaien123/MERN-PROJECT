@@ -1,6 +1,7 @@
 //express sera require de express
 const express = require('express');
-const useRoutes = require('./routes/user.routes');
+const userRoutes = require('./routes/user.routes');
+const postRoutes = require('./routes/post.routes');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
@@ -23,7 +24,8 @@ app.get('/jwtid', requireAuth, (req, res) => {
 });
 
 //routes 
-app.use('/api/user', useRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/post', postRoutes)
 
 //server 
 app.listen(process.env.PORT, () => {
