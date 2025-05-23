@@ -1,6 +1,8 @@
 const PostModel = require("../models/post.model");
 const UserModel = require("../models/user.model");
-const UserMosel = require("../models/user.model");
+const { uploadErrors } = require("../utils/errors.utils");
+const sharp = require("sharp");
+
 const ObjectID = require("mongoose").Types.ObjectId;
 
 module.exports.readPost = async (req, res) => {
@@ -9,9 +11,37 @@ module.exports.readPost = async (req, res) => {
 };
 
 module.exports.createPost = async (req, res) => {
+  let fileName;
+  if (req.file !== null) {
+  try {
+    if (
+      req.file.mimetype != "image/jpg" &&
+      req.file.mimetype != "image/png" &&
+      req.file.mimetype != "image/jpeg"
+    )
+      throw Error("invalid file");
+
+    if (req.file.size > 500000) throw Error("max size");
+  } catch (err) {
+    const errors = uploadErrors(err);
+    return res.status(201).json({ errors });
+  }
+   fileName = req.body.posterId + Date.now() + ".jpg"; 
+
+  try {
+    await sharp(req.file.buffer)
+      .resize({ width: 150, height: 150 }) 
+      .toFile(`${__dirname}/../client/public/uploads/posts/${fileName}`
+      );
+    res.status(201).send("Photo de profil chargé avec succés");
+  } catch (err) {
+    res.status(400).send(err);
+  }
+  }
   const newPost = new PostModel({
     posterId: req.body.posterId,
     message: req.body.message,
+    picture: req.file !== null ? "./uploads/posts/" + fileName : "",
     video: req.body.video,
     likers: [],
     comments: [],
@@ -21,7 +51,6 @@ module.exports.createPost = async (req, res) => {
     const post = await newPost.save();
     return res.status(201).json(post);
   } catch (err) {
-    return res.status(400).send(err);
   }
 };
 

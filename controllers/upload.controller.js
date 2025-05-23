@@ -1,7 +1,6 @@
+
 const UserModel = require("./user.controller");
 const fs = require("fs");
-const { promisify } = require("util");
-const pipeline = promisify(require("stream").pipeline);
 const { uploadErrors } = require("../utils/errors.utils");
 const sharp = require("sharp");
 
@@ -29,5 +28,17 @@ module.exports.uploadProfil = async (req, res) => {
     res.status(201).send("Photo de profil chargé avec succés");
   } catch (err) {
     res.status(400).send(err);
+  }
+
+  try {
+    await UserModel.findByIdAndUpdate(
+      req.body.userId,
+      { $set : {picture: "./uploads/profil/" + fileName}},
+      { net: true, upsert: true, setDefaultsOnInsert: true},
+    )
+    .then((docs) => res.status(201).send(docs))
+    .catch((err) => res.status(400).send({ message: err }));
+  }
+  catch (err) {
   }
 }
