@@ -4,10 +4,12 @@ import Profil from "../../pages/Profil";
 import Trending from "../../pages/Trending";
 import Home from "../../pages/Home";
 import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
+import NavBar from "../NavBar";
 
 function Routes() {
   return (
     <Router>
+      <NavBar />
       <Switch>
       <Route path="/" exact component={Home} />
       <Route path="/profil" exact component={Profil}/>
