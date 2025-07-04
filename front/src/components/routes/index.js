@@ -3,12 +3,14 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Profil from "../../pages/Profil";
 import Trending from "../../pages/Trending";
 import Home from "../../pages/Home";
-import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
+import { Redirect } from "react-router-dom";
 import NavBar from "../NavBar";
+import LeftNav from "../LeftNav";
 
 function Routes() {
   return (
     <Router>
+      <LeftNav /> 
       <NavBar />
       <Switch>
       <Route path="/" exact component={Home} />

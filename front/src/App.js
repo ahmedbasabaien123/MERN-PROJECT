@@ -4,7 +4,6 @@ import axios from "axios";
 import Routes from "./components/routes";
 import { useDispatch } from "react-redux";
 import { getUser } from './actions/user.actions';
-
 function App() { 
   const [uid, setUid] = useState(null);
   const dispatch = useDispatch();
@@ -26,6 +25,7 @@ function App() {
   }, [uid]);
 
   return (
+    
     <UidContext.Provider value={uid}>
     <Routes />;
     </UidContext.Provider>
