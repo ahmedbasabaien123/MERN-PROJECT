@@ -1,11 +1,11 @@
-
-const UserModel = require("./user.controller");
+// const UserModel = require("./user.controller");
 const fs = require("fs");
 const { uploadErrors } = require("../utils/errors.utils");
 const sharp = require("sharp");
+const UserModel = require("../models/user.model");
 
 module.exports.uploadProfil = async (req, res) => {
-  const fileName = req.body.name +".jpg"; 
+  const fileName = req.body.name + ".jpg";
   try {
     if (
       req.file.mimetype != "image/jpg" &&
@@ -22,23 +22,16 @@ module.exports.uploadProfil = async (req, res) => {
 
   try {
     await sharp(req.file.buffer)
-      .resize({ width: 150, height: 150 }) 
-      .toFile(`${__dirname}/../client/public/uploads/profil/${fileName}`
-      );
-    res.status(201).send("Photo de profil chargé avec succés");
+      .resize({ width: 150, height: 150 })
+      .toFile(`${__dirname}/../client/public/uploads/profil/${fileName}`);
+    // res.status(201).send("Photo de profil chargé avec succés");
   } catch (err) {
-    res.status(400).send(err);
+    res.status(401).send(err);
   }
 
-  try {
-    await UserModel.findByIdAndUpdate(
-      req.body.userId,
-      { $set : {picture: "./uploads/profil/" + fileName}},
-      { net: true, upsert: true, setDefaultsOnInsert: true},
-    )
-    .then((docs) => res.status(201).send(docs))
-    .catch((err) => res.status(400).send({ message: err }));
-  }
-  catch (err) {
-  }
-}
+  await UserModel.findByIdAndUpdate(
+    req.body.userId,
+    { $set: { picture: "./uploads/profil/" + fileName } },
+    { net: true, upsert: true, setDefaultsOnInsert: true }
+  ).then((docs) => res.status(201).send(docs));
+};
