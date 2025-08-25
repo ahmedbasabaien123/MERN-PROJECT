@@ -5,7 +5,12 @@ export const GET_POST = "GET_POST";
 export const LIKE_POST = "LIKE_POST";
 export const UNLIKE_POST = "UNLIKE_POST";
 export const UPDATE_POST = "UPDATE_POST";
-export const DELETE_POST = "DELETE_POST"; 
+export const DELETE_POST = "DELETE_POST";
+
+//comments
+export const ADD_COMMENT = "ADD_COMMENT";
+export const EDIT_COMMENT = "EDIT_COMMENT";
+export const DELETE_COMMENT = "EDELETE_COMMENT";
 
 export const getPosts = (num) => {
   return (dispatch) => {
@@ -56,11 +61,11 @@ export const updatePost = (postId, message) => {
       url: `${process.env.REACT_APP_API_URL}api/post/${postId}`,
       data: { message },
     })
-    .then((res) => {
-      dispatch({ type: UPDATE_POST, payload: {message, postId} });
-    })
-    .catch((err) => console.log(err));
-  }
+      .then((res) => {
+        dispatch({ type: UPDATE_POST, payload: { message, postId } });
+      })
+      .catch((err) => console.log(err));
+  };
 };
 
 export const deletePost = (postId) => {
@@ -69,9 +74,51 @@ export const deletePost = (postId) => {
       method: "delete",
       url: `${process.env.REACT_APP_API_URL}api/post/${postId}`,
     })
-    .then((res) => {
-      dispatch({ type: DELETE_POST, payload: {postId} });
+      .then((res) => {
+        dispatch({ type: DELETE_POST, payload: { postId } });
+      })
+      .catch((err) => console.log(err));
+  };
+};
+
+export const addComment = (postId, commenterId, text, commenterPseudo) => {
+  return (dispatch) => {
+    return axios({
+      method: "patch",
+      url: `${process.env.REACT_APP_API_URL}api/post/comment-post/${postId}`,
+      data: { commenterId, text, commenterPseudo },
     })
-    .catch((err) => console.log(err));
-  }
-}
+      .then((res) => {
+        dispatch({ type: ADD_COMMENT, payload: { postId } });
+      })
+      .catch((err) => console.log(err));
+  };
+};
+
+export const editComment = (postId, commentId, text) => {
+  return (dispatch) => {
+    return axios({
+      method: "patch",
+      url: `${process.env.REACT_APP_API_URL}api/post/edit-post/${postId}`,
+      data: { commentId, text },
+    })
+      .then((res) => {
+        dispatch({ type: EDIT_COMMENT, payload: { postId, commentId, text } });
+      })
+      .catch((err) => console.log(err));
+  };
+};
+
+export const deleteComment = (postId, commentId) => {
+  return (dispatch) => {
+    return axios({
+      method: "patch",
+      url: `${process.env.REACT_APP_API_URL}api/post/delete-post/${postId}`,
+      data: { commentId },
+    })
+      .then((res) => {
+        dispatch({ type: DELETE_COMMENT, payload: { postId, commentId } });
+      })
+      .catch((err) => console.log(err));
+  };
+};
