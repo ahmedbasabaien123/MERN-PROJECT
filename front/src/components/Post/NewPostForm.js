@@ -17,24 +17,23 @@ const NewPostForm = () => {
   const dispatch = useDispatch();
 
   const handlePicture = (e) => {
-    setPostPicture(URL.createObjectURL(e.target.files[0]))
+    setPostPicture(URL.createObjectURL(e.target.files[0]));
     setFile(e.target.files[0]);
-    setVideo(' ');
+    setVideo(" ");
   };
   const handlePost = async () => {
-    if (message || postPicture || video ) {
+    if (message || postPicture || video) {
       const data = new FormData();
-      data.append('posterId', userData._id);
-      data.append('message', message);
+      data.append("posterId", userData._id);
+      data.append("message", message);
       if (file) data.append("file", file);
-      data.append('video', video);
+      data.append("video", video);
 
-      await dispatch(addPost(data))
+      await dispatch(addPost(data));
       dispatch(getPosts());
       cancelPost();
-
     } else {
-      alert('Veullez entrer un message')
+      alert("Veullez entrer un message");
     }
   };
 
@@ -45,26 +44,24 @@ const NewPostForm = () => {
     setFile("");
   };
 
- 
-
   useEffect(() => {
     if (isEmpty(userData)) setIsLoading(false);
     const handleVideo = () => {
       let findLink = message.split(" ");
-      for (let i=0; i < findLink.length; i++) {
+      for (let i = 0; i < findLink.length; i++) {
         if (
-          findLink[i].includes("https://www.yout") || findLink[i].includes("https://yout")
-  
+          findLink[i].includes("https://www.yout") ||
+          findLink[i].includes("https://yout")
         ) {
           let embed = findLink[i].replace("watch?v=", "embed/");
           setVideo(embed.split("&")[0]);
           findLink.splice(i, 1);
-          setMessage(findLink.join(" "))
-          setPostPicture('');
+          setMessage(findLink.join(" "));
+          setPostPicture("");
         }
       }
     };
-     handleVideo();
+    handleVideo();
   }, [userData, message, video]);
 
   return (
@@ -101,7 +98,7 @@ const NewPostForm = () => {
             {message ||
               postPicture ||
               video.length >
-                20(
+              (
                   <li className="card-container">
                     <div className="card-left">
                       <img src={userData.picture} alt="user-pic" />

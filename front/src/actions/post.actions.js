@@ -2,6 +2,7 @@ import axios from "axios";
 
 //post
 export const GET_POST = "GET_POST";
+export const GET_ALL_POST = "GET_ALL_POST";
 export const LIKE_POST = "LIKE_POST";
 export const UNLIKE_POST = "UNLIKE_POST";
 export const UPDATE_POST = "UPDATE_POST";
@@ -13,9 +14,11 @@ export const ADD_COMMENT = "ADD_COMMENT";
 export const EDIT_COMMENT = "EDIT_COMMENT";
 export const DELETE_COMMENT = "EDELETE_COMMENT";
 
-//errors 
-export const GET_POST_ERRORS = "GET_POST_ERRORS";
+//trends
+export const GET_TRENDS = "GET_TRENDS";
 
+//errors
+export const GET_POST_ERRORS = "GET_POST_ERRORS";
 
 export const getPosts = (num) => {
   return (dispatch) => {
@@ -26,6 +29,7 @@ export const getPosts = (num) => {
       .then((res) => {
         const array = res.data.slice(0, num);
         dispatch({ type: GET_POST, payload: array });
+        dispatch({ type: GET_ALL_POST, payload: res.data });
       })
       .catch((err) => console.log(err));
   };
@@ -134,13 +138,18 @@ export const addPost = (data) => {
       method: "post",
       url: `${process.env.REACT_APP_API_URL}api/post/`,
       data,
-    })
-    .then((res) => {
+    }).then((res) => {
       if (res.data.errors) {
-        dispatch({type : GET_POST_ERRORS, payload: res.data.errors})
+        dispatch({ type: GET_POST_ERRORS, payload: res.data.errors });
       } else {
-        dispatch({ type: GET_POST_ERRORS, payload: '' });
+        dispatch({ type: GET_POST_ERRORS, payload: "" });
       }
-    })
+    });
+  };
+};
+
+export const getTrends = (sortedArray) => {
+  return (dispatch) => {
+    dispatchEvent({ type: GET_TRENDS, payload: sortedArray });
   };
 };
